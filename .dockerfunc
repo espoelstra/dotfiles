@@ -3,6 +3,12 @@
 
 export DOCKER_REPO_PREFIX=jess
 
+# Check devices exist before mapping if they aren't critical
+if [ -f /dev/dri ]; then
+  DRI_DEVICE="--device /dev/dri"
+else
+  DRI_DEVICE=
+fi
 #
 # Helper Functions
 #
@@ -90,7 +96,7 @@ audacity(){
 	docker run -d \
 		-v /etc/localtime:/etc/localtime:ro \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${DISPLAY}" \
 		-e QT_DEVICE_PIXEL_RATIO \
 		--device /dev/snd \
 		--group-add audio \
@@ -140,11 +146,11 @@ cheese(){
 	docker run -d \
 		-v /etc/localtime:/etc/localtime:ro \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${DISPLAY}" \
 		-v "${HOME}/Pictures:/root/Pictures" \
 		--device /dev/video0 \
 		--device /dev/snd \
-		--device /dev/dri \
+		${DRI_DEVICE} \
 		--name cheese \
 		${DOCKER_REPO_PREFIX}/cheese
 }
@@ -169,7 +175,7 @@ chrome(){
 		--memory 3gb \
 		-v /etc/localtime:/etc/localtime:ro \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${DISPLAY}" \
 		-v "${HOME}/Downloads:/root/Downloads" \
 		-v "${HOME}/Pictures:/root/Pictures" \
 		-v "${HOME}/Torrents:/root/Torrents" \
@@ -178,7 +184,7 @@ chrome(){
 		-v /etc/hosts:/etc/hosts \
 		--security-opt seccomp:/etc/docker/seccomp/chrome.json \
 		--device /dev/snd \
-		--device /dev/dri \
+		${DRI_DEVICE} \
 		--device /dev/video0 \
 		--device /dev/usb \
 		--device /dev/bus/usb \
@@ -242,16 +248,16 @@ firefox(){
 		-v "${HOME}/Downloads:/root/Downloads" \
 		-v "${HOME}/Pictures:/root/Pictures" \
 		-v "${HOME}/Torrents:/root/Torrents" \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${DISPLAY}" \
 		-e GDK_SCALE \
 		-e GDK_DPI_SCALE \
 		--device /dev/snd \
-		--device /dev/dri \
+		${DRI_DEVICE} \
 		--name firefox \
 		${DOCKER_REPO_PREFIX}/firefox "$@"
 
 	# exit current shell
-	exit 0
+	# exit 0
 }
 fleetctl(){
 	docker run --rm -it \
@@ -283,7 +289,7 @@ gimp(){
 	docker run -d \
 		-v /etc/localtime:/etc/localtime:ro \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${DISPLAY}" \
 		-v "${HOME}/Pictures:/root/Pictures" \
 		-v "${HOME}/.gtkrc:/root/.gtkrc" \
 		-e GDK_SCALE \
@@ -375,7 +381,7 @@ keypassxc(){
 		-v /etc/localtime:/etc/localtime:ro \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		-v /usr/share/X11/xkb:/usr/share/X11/xkb:ro \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${DISPLAY}" \
 		-v /etc/machine-id:/etc/machine-id:ro \
 		--name keypassxc \
 		${DOCKER_REPO_PREFIX}/keepassxc
@@ -391,7 +397,7 @@ kvm(){
 		-v /etc/localtime:/etc/localtime:ro \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		-v /run/libvirt:/var/run/libvirt \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${DISPLAY}" \
 		--link pulseaudio:pulseaudio \
 		-e PULSE_SERVER=pulseaudio \
 		--group-add audio \
@@ -405,7 +411,7 @@ libreoffice(){
 	docker run -d \
 		-v /etc/localtime:/etc/localtime:ro \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${DISPLAY}" \
 		-v "${HOME}/slides:/root/slides" \
 		-e GDK_SCALE \
 		-e GDK_DPI_SCALE \
@@ -502,7 +508,7 @@ neoman(){
 	docker run -d \
 		-v /etc/localtime:/etc/localtime:ro \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${DISPLAY}" \
 		--device /dev/bus/usb \
 		--device /dev/usb \
 		--name neoman \
@@ -514,8 +520,8 @@ nes(){
 
 	docker run -d \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
-		--device /dev/dri \
+		-e "DISPLAY=${DISPLAY}" \
+		${DRI_DEVICE} \
 		--device /dev/snd \
 		--name nes \
 		${DOCKER_REPO_PREFIX}/nes "/games/${game}.rom"
@@ -553,7 +559,7 @@ notify_osd(){
 		-v /etc \
 		-v /home/user/.dbus \
 		-v /home/user/.cache/dconf \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${DISPLAY}" \
 		--name notify_osd \
 		${DOCKER_REPO_PREFIX}/notify-osd
 }
@@ -593,7 +599,7 @@ opensnitch(){
 	docker run -d \
 		-v /etc/localtime:/etc/localtime:ro \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${DISPLAY}" \
 		-v /usr/share/X11:/usr/share/X11:ro \
 		-v /usr/share/dbus-1:/usr/share/dbus-1 \
 		-v /etc/machine-id:/etc/machine-id:ro \
@@ -666,7 +672,7 @@ pivman(){
 	docker run -d \
 		-v /etc/localtime:/etc/localtime:ro \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${DISPLAY}" \
 		--device /dev/bus/usb \
 		--device /dev/usb \
 		--name pivman \
@@ -739,7 +745,7 @@ remmina(){
 	docker run -d \
 		-v /etc/localtime:/etc/localtime:ro \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${DISPLAY}" \
 		-e GDK_SCALE \
 		-e GDK_DPI_SCALE \
 		-v "${HOME}/.remmina:/root/.remmina" \
@@ -753,11 +759,11 @@ ricochet(){
 	docker run -d \
 		-v /etc/localtime:/etc/localtime:ro \
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${DISPLAY}" \
 		-e GDK_SCALE \
 		-e GDK_DPI_SCALE \
 		-e QT_DEVICE_PIXEL_RATIO \
-		--device /dev/dri \
+		${DRI_DEVICE} \
 		--name ricochet \
 		${DOCKER_REPO_PREFIX}/ricochet
 }
@@ -769,9 +775,9 @@ rstudio(){
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		-v "${HOME}/fastly-logs:/root/fastly-logs" \
 		-v /dev/shm:/dev/shm \
-		-e "DISPLAY=unix${DISPLAY}" \
+		-e "DISPLAY=${DISPLAY}" \
 		-e QT_DEVICE_PIXEL_RATIO \
-		--device /dev/dri \
+		${DRI_DEVICE} \
 		--name rstudio \
 		${DOCKER_REPO_PREFIX}/rstudio
 }
@@ -810,7 +816,7 @@ scudcloud(){
 		${DOCKER_REPO_PREFIX}/scudcloud
 
 	# exit current shell
-	exit 0
+	# exit 0
 }
 shorewall(){
 	del_stopped shorewall
@@ -847,7 +853,7 @@ slack(){
 		-v /tmp/.X11-unix:/tmp/.X11-unix \
 		-e "DISPLAY=unix${DISPLAY}" \
 		--device /dev/snd \
-		--device /dev/dri \
+		${DRI_DEVICE} \
 		--device /dev/video0 \
 		--group-add audio \
 		--group-add video \
@@ -866,7 +872,7 @@ spotify(){
 		-e QT_DEVICE_PIXEL_RATIO \
 		--security-opt seccomp:unconfined \
 		--device /dev/snd \
-		--device /dev/dri \
+		${DRI_DEVICE} \
 		--group-add audio \
 		--group-add video \
 		--name spotify \
@@ -913,7 +919,7 @@ steam(){
 		-e "DISPLAY=unix${DISPLAY}" \
 		--link pulseaudio:pulseaudio \
 		-e PULSE_SERVER=pulseaudio \
-		--device /dev/dri \
+		${DRI_DEVICE} \
 		--name steam \
 		${DOCKER_REPO_PREFIX}/steam
 }
@@ -983,7 +989,7 @@ torbrowser(){
 		${DOCKER_REPO_PREFIX}/tor-browser
 
 	# exit current shell
-	exit 0
+	# exit 0
 }
 tormessenger(){
 	del_stopped tormessenger
@@ -999,7 +1005,7 @@ tormessenger(){
 		${DOCKER_REPO_PREFIX}/tor-messenger
 
 	# exit current shell
-	exit 0
+	# exit 0
 }
 torproxy(){
 	del_stopped torproxy
@@ -1075,7 +1081,7 @@ visualstudio(){
 		-v /etc/localtime:/etc/localtime:ro \
 		-v /tmp/.X11-unix:/tmp/.X11-unix  \
 		-e "DISPLAY=unix${DISPLAY}" \
-		--device /dev/dri \
+		${DRI_DEVICE} \
 		--name visualstudio \
 		${DOCKER_REPO_PREFIX}/vscode
 }
@@ -1096,7 +1102,7 @@ vlc(){
 		--group-add audio \
 		--group-add video \
 		-v "${HOME}/Torrents:/home/vlc/Torrents" \
-		--device /dev/dri \
+		${DRI_DEVICE} \
 		--name vlc \
 		${DOCKER_REPO_PREFIX}/vlc
 }
