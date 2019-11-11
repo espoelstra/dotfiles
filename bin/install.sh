@@ -70,19 +70,19 @@ setup_sources_min() {
 }
 
 # sets up apt sources
-# assumes you are going to use debian buster
+# assumes you are going to use debian stretch
 setup_sources() {
 	setup_sources_min;
 
 	cat <<-EOF > /etc/apt/sources.list
-	deb http://httpredir.debian.org/debian buster main contrib non-free
-	deb-src http://httpredir.debian.org/debian/ buster main contrib non-free
+	deb http://httpredir.debian.org/debian stretch main contrib non-free
+	deb-src http://httpredir.debian.org/debian/ stretch main contrib non-free
 
-	deb http://httpredir.debian.org/debian/ buster-updates main contrib non-free
-	deb-src http://httpredir.debian.org/debian/ buster-updates main contrib non-free
+	deb http://httpredir.debian.org/debian/ stretch-updates main contrib non-free
+	deb-src http://httpredir.debian.org/debian/ stretch-updates main contrib non-free
 
-	deb http://security.debian.org/ buster/updates main contrib non-free
-	deb-src http://security.debian.org/ buster/updates main contrib non-free
+	deb http://security.debian.org/ stretch/updates main contrib non-free
+	deb-src http://security.debian.org/ stretch/updates main contrib non-free
 
 	deb http://httpredir.debian.org/debian experimental main contrib non-free
 	deb-src http://httpredir.debian.org/debian experimental main contrib non-free
@@ -115,7 +115,7 @@ setup_sources() {
 
 	# Add the Google Chrome distribution URI as a package source
 	cat <<-EOF > /etc/apt/sources.list.d/google-chrome.list
-	deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main
+	deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main
 	EOF
 
 	# Import the Google Chrome public key
@@ -509,13 +509,13 @@ get_dotfiles() {
 
 	if [[ ! -d "${HOME}/dotfiles" ]]; then
 		# install dotfiles from repo
-		git clone git@github.com:jessfraz/dotfiles.git "${HOME}/dotfiles"
+		git clone https://github.com/jessfraz/dotfiles.git "${HOME}/dotfiles"
 	fi
 
 	cd "${HOME}/dotfiles"
 
 	# set the correct origin
-	git remote set-url origin git@github.com:jessfraz/dotfiles.git
+	git remote set-url origin https://github.com/jessfraz/dotfiles.git
 
 	# installs all the things
 	make
@@ -523,8 +523,8 @@ get_dotfiles() {
 	# enable dbus for the user session
 	# systemctl --user enable dbus.socket
 
-	sudo systemctl enable "i3lock@${TARGET_USER}"
-	sudo systemctl enable suspend-sedation.service
+	# sudo systemctl enable "i3lock@${TARGET_USER}"
+	# sudo systemctl enable suspend-sedation.service
 
 	cd "$HOME"
 	mkdir -p ~/Pictures/Screenshots
@@ -540,7 +540,7 @@ install_vim() {
 
 	# install .vim files
 	sudo rm -rf "${HOME}/.vim"
-	git clone --recursive git@github.com:jessfraz/.vim.git "${HOME}/.vim"
+	git clone --recursive https://github.com/jessfraz/.vim.git "${HOME}/.vim"
 	(
 	cd "${HOME}/.vim"
 	make install

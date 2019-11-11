@@ -16,21 +16,21 @@ dotfiles: ## Installs the dotfiles.
 		f=$$(basename $$file); \
 		ln -sfn $$file $(HOME)/$$f; \
 	done; \
-	gpg --list-keys || true;
-	ln -sfn $(CURDIR)/.gnupg/gpg.conf $(HOME)/.gnupg/gpg.conf;
-	ln -sfn $(CURDIR)/.gnupg/gpg-agent.conf $(HOME)/.gnupg/gpg-agent.conf;
-	ln -fn $(CURDIR)/gitignore $(HOME)/.gitignore;
-	git update-index --skip-worktree $(CURDIR)/.gitconfig;
+	# gpg --list-keys || true;
+	# ln -sfn $(CURDIR)/.gnupg/gpg.conf $(HOME)/.gnupg/gpg.conf;
+	# ln -sfn $(CURDIR)/.gnupg/gpg-agent.conf $(HOME)/.gnupg/gpg-agent.conf;
+	# ln -fn $(CURDIR)/gitignore $(HOME)/.gitignore;
+	# git update-index --skip-worktree $(CURDIR)/.gitconfig;
 	mkdir -p $(HOME)/.config;
 	ln -snf $(CURDIR)/.i3 $(HOME)/.config/sway;
 	mkdir -p $(HOME)/.local/share;
 	ln -snf $(CURDIR)/.fonts $(HOME)/.local/share/fonts;
 	ln -snf $(CURDIR)/.bash_profile $(HOME)/.profile;
-	if [ -f /usr/local/bin/pinentry ]; then \
-		sudo ln -snf /usr/bin/pinentry /usr/local/bin/pinentry; \
-	fi;
-	mkdir -p $(HOME)/Pictures;
-	ln -snf $(CURDIR)/central-park.jpg $(HOME)/Pictures/central-park.jpg;
+	# if [ -f /usr/local/bin/pinentry ]; then \
+	# 	sudo ln -snf /usr/bin/pinentry /usr/local/bin/pinentry; \
+	# fi;
+	# mkdir -p $(HOME)/Pictures;
+	# ln -snf $(CURDIR)/central-park.jpg $(HOME)/Pictures/central-park.jpg;
 	mkdir -p $(HOME)/.config/fontconfig;
 	ln -snf $(CURDIR)/.config/fontconfig/fontconfig.conf $(HOME)/.config/fontconfig/fontconfig.conf;
 	xrdb -merge $(HOME)/.Xdefaults || true
@@ -47,9 +47,9 @@ etc: ## Installs the etc directory files.
 	done
 	systemctl --user daemon-reload || true
 	sudo systemctl daemon-reload
-	sudo systemctl enable systemd-networkd systemd-resolved
-	sudo systemctl start systemd-networkd systemd-resolved
-	sudo ln -snf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+	# sudo systemctl enable systemd-networkd systemd-resolved
+	# sudo systemctl start systemd-networkd systemd-resolved
+	# sudo ln -snf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 
 .PHONY: usr
 usr: ## Installs the usr directory files.
