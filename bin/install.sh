@@ -175,7 +175,7 @@ base_min() {
 		zip \
 		--no-install-recommends
 
-	apt autoremove
+	apt autoremove -y
 	apt autoclean
 	apt clean
 
@@ -198,7 +198,6 @@ base() {
 		fwupdate \
 		gnupg-agent \
 		google-cloud-sdk \
-		iwd \
 		libapparmor-dev \
 		libimobiledevice6 \
 		libltdl-dev \
@@ -211,7 +210,7 @@ base() {
 
 	setup_sudo
 
-	apt autoremove
+	apt autoremove -y
 	apt autoclean
 	apt clean
 }
@@ -225,7 +224,7 @@ install_dropbear() {
 		dropbear-initramfs \
 		--no-install-recommends
 
-	apt autoremove
+	apt autoremove -y
 	apt autoclean
 	apt clean
 
@@ -436,7 +435,7 @@ install_graphics() {
 	apt update || true
 	apt -y upgrade
 
-	apt install -y "${pkgs[@]}" --no-install-recommends
+	apt install -y iwd "${pkgs[@]}" --no-install-recommends
 }
 
 # install custom scripts/binaries
